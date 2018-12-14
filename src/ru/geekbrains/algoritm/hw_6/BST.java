@@ -22,6 +22,8 @@ public class BST<Key extends Comparable<Key>, Value> {
     }
 
     private Node root=null;
+    private boolean balanced = true;
+
 
     private boolean isEmpty(){
         return root==null;
@@ -192,8 +194,9 @@ public class BST<Key extends Comparable<Key>, Value> {
         return node.height;
     }
 
-    public void isBalanced(){
+    public boolean isBalanced(){
        isBalanced(root);
+       return balanced;
     }
 
 
@@ -201,11 +204,12 @@ public class BST<Key extends Comparable<Key>, Value> {
             if (node == null) {
                 return ;
             }
-            System.out.println(node.key+" "+node.value);
-         //   if (Math.abs(height(node.left) - height(node.right)) > 1) {
-         //       System.out.println("BST is imbalanced");
-         //       return false;
-         //   }
+          //  System.out.println(node.key+" "+node.value);
+           if (Math.abs(height(node.left) - height(node.right)) > 1) {
+             //   System.out.println("BST is imbalanced");
+                balanced=false;
+                //       return false;
+            }
             isBalanced(node.left);
             isBalanced(node.right);
           //  return true;
