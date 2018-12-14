@@ -1,7 +1,6 @@
 package ru.geekbrains.algoritm.hw_6;
 
 
-
 public class BST<Key extends Comparable<Key>, Value> {
 
     private class Node{
@@ -10,11 +9,13 @@ public class BST<Key extends Comparable<Key>, Value> {
         Node left;
         Node right;
         int size;
+        int height;
 
         public Node(Key key, Value value) {
             this.key = key;
             this.value = value;
             this.size=1;
+            this.height=0;
             this.left=null;
             this.right=null;
         }
@@ -24,6 +25,16 @@ public class BST<Key extends Comparable<Key>, Value> {
 
     private boolean isEmpty(){
         return root==null;
+    }
+    public int height(){
+        return height(root);
+    }
+
+    private int height(Node node){
+        if (node==null){
+            return 0;
+        }
+        return node.height;
     }
 
     public int size(){
@@ -72,6 +83,7 @@ public class BST<Key extends Comparable<Key>, Value> {
             return;
         }
         else if (size(position)==1) {
+            position.height++;
             if (temp<0){
                 position.left=node;
             } else {
@@ -91,6 +103,7 @@ public class BST<Key extends Comparable<Key>, Value> {
             }
         }
         position.size=size(position.left)+size(position.right)+1;
+        position.height=checkHeight(position);
     }
 
     public Value delete(Key key){
@@ -106,6 +119,7 @@ public class BST<Key extends Comparable<Key>, Value> {
                 node.size=0;
                 node.key=null;
                 node.value=null;
+                node.height=0;
                 return result;
             } else if (node.right==null){
              // node=node.left;
@@ -114,6 +128,7 @@ public class BST<Key extends Comparable<Key>, Value> {
                 node.value=node.left.value;
                 node.right=node.left.right;
                 node.size=node.left.size;
+                node.height=node.left.height;
                 node.left=node.left.left;
             } else if (node.left==null){
               //  node=node.right;
@@ -121,16 +136,20 @@ public class BST<Key extends Comparable<Key>, Value> {
                 node.value=node.right.value;
                 node.left=node.right.left;
                 node.size=node.right.size;
+                node.height=node.right.height;
                 node.right=node.right.right;
             } else if (node.right.left==null){
                 node.size= node.right.size+node.left.size;
                 node.key=node.right.key;
                 node.value=node.right.value;
+                node.height=height(node.right);
                 node.right=node.right.right;
+                node.height= checkHeight(node);
             } else {
                 Node tempNode=deleteLeft(node.right);
                 node.value=tempNode.value;
                 node.key=tempNode.key;
+
                 tempNode=null;
             }
         } else if (temp<0){
@@ -140,13 +159,14 @@ public class BST<Key extends Comparable<Key>, Value> {
             }
             result=null;
         } else {
-            delete(key,node.right);
-            if (node.right.size==0){
-                node.right=null;
+            delete(key, node.right);
+            if (node.right.size == 0) {
+                node.right = null;
             }
-            result=null;
+            result = null;
         }
-            node.size=size(node.left)+size(node.right)+1;
+        node.size=size(node.left)+size(node.right)+1;
+        node.height=checkHeight(node);
         return result;
     }
 
@@ -154,6 +174,7 @@ public class BST<Key extends Comparable<Key>, Value> {
         if (node.left==null){
             Node temp = new Node(node.key,node.value);
             delete(temp.key,root);
+           // checkHeight(node);
             return temp;
         } else{
             node.size=size(node.left)+size(node.right)+1;
@@ -161,6 +182,34 @@ public class BST<Key extends Comparable<Key>, Value> {
         }
     }
 
+    private int checkHeight(Node node){
+        if (node.size==1){
+            return 0;
+        }
+        if (height(node.left)>=height(node.right)) {
+            node.height = height(node.left)+1;
+        } else node.height = height(node.right)+1;
+        return node.height;
+    }
+
+    public void isBalanced(){
+       isBalanced(root);
+    }
+
+
+    private void isBalanced(Node node) {
+            if (node == null) {
+                return ;
+            }
+            System.out.println(node.key+" "+node.value);
+         //   if (Math.abs(height(node.left) - height(node.right)) > 1) {
+         //       System.out.println("BST is imbalanced");
+         //       return false;
+         //   }
+            isBalanced(node.left);
+            isBalanced(node.right);
+          //  return true;
+    }
 
 
 }
