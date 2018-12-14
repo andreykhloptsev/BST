@@ -209,10 +209,10 @@ public class BST<Key extends Comparable<Key>, Value> {
              //   System.out.println("BST is imbalanced");
                 balanced=false;
                 //       return false;
-            }
-            isBalanced(node.left);
-            isBalanced(node.right);
-          //  return true;
+            } else {
+               isBalanced(node.left);
+               isBalanced(node.right);
+           }//  return true;
     }
 
 
